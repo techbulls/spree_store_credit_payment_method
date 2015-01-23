@@ -3,13 +3,14 @@ require 'spec_helper'
 shared_examples "check total store credit from payments" do
   context "with valid payments" do
     let(:order)           { payment.order }
-    let!(:payment)        { create(:store_credit_payment) }
-    let!(:second_payment) { create(:store_credit_payment, order: order) }
+    let!(:payment)        { create(:store_credit_payment, amount: 10.0) }
+    let!(:second_payment) { create(:store_credit_payment, amount: 20.0, order: order) }
+    let!(:store_credit_refund) { create(:store_credit_payment, amount: -20.0, order: order, source: create(:payment)) }
 
     subject { order }
 
-    it "returns the sum of the payment amounts" do
-      subject.total_applicable_store_credit.should eq (payment.amount + second_payment.amount)
+    it "returns the sum of the store credit payment amounts" do
+      subject.total_applicable_store_credit.should eq (payment.amount + second_payment.amount + store_credit_refund.amount)
     end
   end
 
@@ -268,13 +269,13 @@ describe "Order" do
 
   describe "#using_store_credit?" do
     let(:order) { create(:order) }
-    subject { order.using_store_credit? } 
+    subject { order.using_store_credit? }
 
     context "order is in the confirm state" do
       before { order.update_attributes(state: 'confirm') }
 
       context "when there is a store credit payment" do
-        let!(:store_credit_payment) { create(:store_credit_payment, order: order) } 
+        let!(:store_credit_payment) { create(:store_credit_payment, order: order) }
         it { should be true }
       end
 
@@ -287,7 +288,7 @@ describe "Order" do
       before { order.update_attributes(state: 'complete') }
 
       context "when there is a store credit payment" do
-        let!(:store_credit_payment) { create(:store_credit_payment, order: order) } 
+        let!(:store_credit_payment) { create(:store_credit_payment, order: order) }
         it { should be true }
       end
 

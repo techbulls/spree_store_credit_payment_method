@@ -62,7 +62,7 @@ module SpreeStoreCredits::OrderDecorator
 
     def total_applicable_store_credit
       if confirm? || complete?
-        payments.store_credits.valid.sum(:amount)
+        payments.where(payment_method: Spree::PaymentMethod.where(type: Spree::PaymentMethod::StoreCredit.to_s)).valid.sum(:amount)
       else
         [total, (user.try(:total_available_store_credit) || 0.0)].min
       end
