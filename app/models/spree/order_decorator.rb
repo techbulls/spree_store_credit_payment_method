@@ -26,7 +26,10 @@ module SpreeStoreCredits::OrderDecorator
       remaining_total = outstanding_balance
 
       if user && user.store_credits.any?
-        payment_method = Spree::PaymentMethod.find_by_type('Spree::PaymentMethod::StoreCredit')
+        payment_methods = Spree::PaymentMethod.where(type: 'Spree::PaymentMethod::StoreCredit', environment: Rails.env)
+        raise "Too many store credit payment methods found" if payment_methods.length > 1
+
+        payment_method = payment_methods[0]
         raise "Store credit payment method could not be found" unless payment_method
 
         user.store_credits.order_by_priority.each do |credit|
