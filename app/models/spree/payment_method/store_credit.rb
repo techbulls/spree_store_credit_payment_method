@@ -19,7 +19,7 @@ module Spree
       else
         action = -> (store_credit) {
           store_credit.authorize(
-            amount_in_cents / 100.0,
+            amount_in_cents.to_d / 100.0,
             gateway_options[:currency],
             action_originator: gateway_options[:originator]
           )
@@ -31,7 +31,7 @@ module Spree
     def capture(amount_in_cents, auth_code, gateway_options = {})
       action = -> (store_credit) {
         store_credit.capture(
-          amount_in_cents / 100.0,
+          amount_in_cents.to_d / 100.0,
           auth_code,
           gateway_options[:currency],
           action_originator: gateway_options[:originator]
@@ -67,7 +67,7 @@ module Spree
         currency = gateway_options[:currency] || store_credit.currency
         originator = gateway_options[:originator]
 
-        store_credit.credit(amount_in_cents / 100.0, auth_code, currency, action_originator: originator)
+        store_credit.credit(amount_in_cents.to_d / 100.0, auth_code, currency, action_originator: originator)
       end
 
       handle_action(action, :credit, auth_code)

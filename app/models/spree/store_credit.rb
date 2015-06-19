@@ -64,16 +64,16 @@ class Spree::StoreCredit < ActiveRecord::Base
       })
       authorization_code
     else
-      errors.add(:base, Spree.t('store_credit_payment_method.insufficient_authorized_amount'))
+      errors.add(:base, Spree.t('store_credit_payment_method.insufficient_authorized_amount', amount: amount))
       false
     end
   end
 
   def validate_authorization(amount, order_currency)
     if amount_remaining < amount
-      errors.add(:base, Spree.t('store_credit_payment_method.insufficient_funds'))
+      errors.add(:base, Spree.t('store_credit_payment_method.insufficient_funds', amount: amount, amount_remaining: amount_remaining))
     elsif currency != order_currency
-      errors.add(:base, Spree.t('store_credit_payment_method.currency_mismatch'))
+      errors.add(:base, Spree.t('store_credit_payment_method.currency_mismatch', credit_currency: currency, order_currency: order_currency))
     end
     return errors.blank?
   end
@@ -83,7 +83,7 @@ class Spree::StoreCredit < ActiveRecord::Base
 
     if amount <= amount_authorized
       if currency != order_currency
-        errors.add(:base, Spree.t('store_credit_payment_method.currency_mismatch'))
+        errors.add(:base, Spree.t('store_credit_payment_method.currency_mismatch', credit_currency: currency, order_currency: order_currency))
         false
       else
         update_attributes!({
@@ -98,7 +98,7 @@ class Spree::StoreCredit < ActiveRecord::Base
         authorization_code
       end
     else
-      errors.add(:base, Spree.t('store_credit_payment_method.insufficient_authorized_amount'))
+      errors.add(:base, Spree.t('store_credit_payment_method.insufficient_authorized_amount', amount: amount))
       false
     end
   end
@@ -125,7 +125,7 @@ class Spree::StoreCredit < ActiveRecord::Base
     capture_event = store_credit_events.find_by(action: CAPTURE_ACTION, authorization_code: authorization_code)
 
     if currency != order_currency  # sanity check to make sure the order currency hasn't changed since the auth
-      errors.add(:base, Spree.t('store_credit_payment_method.currency_mismatch'))
+      errors.add(:base, Spree.t('store_credit_payment_method.currency_mismatch', credit_currency: currency, order_currency: order_currency))
       false
     elsif capture_event && amount <= capture_event.amount
       action_attributes = {
@@ -213,13 +213,13 @@ class Spree::StoreCredit < ActiveRecord::Base
     return true if amount_used.nil?
 
     if amount_used > amount
-      errors.add(:amount_used, Spree.t('admin.store_credits.errors.amount_used_cannot_be_greater'))
+      errors.add(:amount_used, Spree.t('admin.store_credits.errors.amount_used_cannot_be_greater', amount_used: amount_used, amount: amount))
     end
   end
 
   def amount_authorized_less_than_or_equal_to_amount
     if (amount_used + amount_authorized) > amount
-      errors.add(:amount_authorized, Spree.t('admin.store_credits.errors.amount_authorized_exceeds_total_credit'))
+      errors.add(:amount_authorized, Spree.t('admin.store_credits.errors.amount_authorized_exceeds_total_credit', amount_used: amount_used, amount_authorized: amount_authorized, amount: amount))
     end
   end
 
