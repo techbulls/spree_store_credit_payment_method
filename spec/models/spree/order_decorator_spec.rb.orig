@@ -123,8 +123,12 @@ describe "Order" do
 
         before { subject }
 
+<<<<<<< HEAD
+        it "should invalidate the credit card payment" do
+=======
         xit "should invalidate the credit card payment" do
           # reloading payments in spree casuses stack level too deep in CircleCi
+>>>>>>> cfded6165fa906c0aae66c46255aeaccb614b139
           cc_payment.reload.state.should == 'invalid'
         end
       end

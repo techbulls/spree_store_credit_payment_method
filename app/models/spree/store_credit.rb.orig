@@ -70,8 +70,13 @@ class Spree::StoreCredit < ActiveRecord::Base
   end
 
   def validate_authorization(amount, order_currency)
+<<<<<<< HEAD
+    if amount_remaining.to_d < amount.to_d
+      errors.add(:base, Spree.t('store_credit_payment_method.insufficient_funds'))
+=======
     if amount_remaining < amount
       errors.add(:base, Spree.t('store_credit_payment_method.insufficient_funds', amount: amount, amount_remaining: amount_remaining))
+>>>>>>> cfded6165fa906c0aae66c46255aeaccb614b139
     elsif currency != order_currency
       errors.add(:base, Spree.t('store_credit_payment_method.currency_mismatch', credit_currency: currency, order_currency: order_currency))
     end

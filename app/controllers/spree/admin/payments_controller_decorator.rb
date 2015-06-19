@@ -13,6 +13,8 @@ module SpreeStoreCredits::AdminPaymentsControllerDecorator
   def handle_store_credit_create
     @payment = @order.payments.build(object_params)
     if @payment.store_credit?
+      # Hack to prevent the card it from overwriting the store_credit_id
+      params.delete :card
       if store_credit_id = params["payment"]["store_credit_id"].presence
         store_credit = @order.user.store_credits.find(store_credit_id)
         amount = [ params[:payment][:amount].to_f,
@@ -23,7 +25,6 @@ module SpreeStoreCredits::AdminPaymentsControllerDecorator
         @payment.assign_attributes(source: store_credit,
                                    amount: amount,
                                    response_code: auth_code)
-
       else
         flash[:error] = Spree.t("admin.store_credits.no_store_credit_selected")
         redirect_to spree.admin_order_payments_path(@order) and return false

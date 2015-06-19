@@ -1,6 +1,9 @@
 module SpreeStoreCredits::OrderDecorator
   def self.included(base)
+<<<<<<< HEAD
     base.state_machine.before_transition to: :confirm, do: :add_store_credit_payments
+=======
+>>>>>>> cfded6165fa906c0aae66c46255aeaccb614b139
     base.state_machine.after_transition to: :confirm, do: :create_gift_cards
 
     base.prepend(InstanceMethods)
