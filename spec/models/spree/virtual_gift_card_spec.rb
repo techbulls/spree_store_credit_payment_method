@@ -165,8 +165,8 @@ describe "VirtualGiftCard" do
   end
 
   describe '#formatted_redemption_code' do
-    let(:redemption_code) { 'AAAABBBBCCCCDDDD' }
-    let(:formatted_redemption_code) { 'AAAA-BBBB-CCCC-DDDD' }
+    let(:redemption_code) { 'AAAABBBBCCCCDD' }
+    let(:formatted_redemption_code) { 'AAAA-BBBB-CCCC-DD' }
     let(:gift_card) { Spree::VirtualGiftCard.create(amount: 20, currency: 'USD') }
 
     subject { gift_card.formatted_redemption_code }

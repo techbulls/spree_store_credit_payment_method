@@ -5,12 +5,12 @@ class Spree::VirtualGiftCard < ActiveRecord::Base
   belongs_to :purchaser, class_name: 'Spree::User'
   belongs_to :redeemer, class_name: 'Spree::User'
   belongs_to :line_item, class_name: 'Spree::LineItem'
-  before_create :set_redemption_code, unless: -> { redemption_code }
+  before_create :set_redemption_code, if: -> { redemption_code.blank? }
 
 
   validates :amount, numericality: { greater_than: 0 }
   validates_uniqueness_of :redemption_code, conditions: -> { where(redeemed_at: nil) }
-  validates_presence_of :purchaser_id, :line_item_id
+  validates_presence_of :purchaser_id
 
   scope :unredeemed, -> { where(redeemed_at: nil) }
   scope :by_redemption_code, -> (redemption_code) { where(redemption_code: redemption_code) }
@@ -38,7 +38,7 @@ class Spree::VirtualGiftCard < ActiveRecord::Base
   end
 
   def formatted_redemption_code
-    redemption_code.scan(/.{4}/).join('-')
+    redemption_code.scan(/.{1,4}/).join('-')
   end
 
   def formatted_amount
