@@ -12,24 +12,10 @@ module SpreeStoreCredits::OrderDecorator
       super
     end
 
-  def create_gift_cards
-      puts "*****************************IN CREATE GIFT CARDS"
+    def create_gift_cards
       line_items.each do |item|
         item.quantity.times do
-          if item.gift_card
-              Spree::VirtualGiftCard.create!(amount: item.price, currency: item.currency, purchaser: user, line_item: item)
-              virtual_gift_cards_details = VirtualGiftCardsDetails.find_by(
-                :line_item_id => item.id
-              )
-              virtual_gift_card = Spree::VirtualGiftCard.find_by(
-                :line_item_id => item.id
-              )
-              puts "SENDING MAIL"
-              puts "virtual_gift_cards_details: " + virtual_gift_cards_details.id.to_s
-              puts "virtual_gift_card: " + virtual_gift_card.id.to_s
-              
-              VirtualGiftCardsMailer.send_redemption_code(virtual_gift_cards_details, virtual_gift_card).deliver_now
-          end          
+          Spree::VirtualGiftCard.create!(amount: item.price, currency: item.currency, purchaser: user, line_item: item) if item.gift_card?
         end
       end
     end
