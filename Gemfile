@@ -6,6 +6,11 @@ gem 'spree_auth_devise', github: 'spree/spree_auth_devise', branch: '2-2-stable'
 
 gemspec
 
+group :assets do
+  gem 'coffee-rails'
+  gem 'sass-rails'
+end
+
 group :test do
   gem 'with_model'
 end
