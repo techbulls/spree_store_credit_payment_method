@@ -151,3 +151,5 @@ module SpreeStoreCredits::OrderDecorator
 end
 
 Spree::Order.include SpreeStoreCredits::OrderDecorator
+Spree::Order.include Spree::LoyaltyPoints
+Spree::Order.include Spree::Order::LoyaltyPoints

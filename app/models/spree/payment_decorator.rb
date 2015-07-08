@@ -3,7 +3,7 @@ module SpreeStoreCredits::PaymentDecorator
     base.validates :amount, numericality: { greater_than: 0 }, :if => :by_loyalty_points?
     base.validate :redeemable_user_balance, :if => :by_loyalty_points?
     
-    base.scope :state_not, ->(s) { where('state != ?', s) }
+    base.scope :state_not, ->(s) { base.where('state != ?', s) }
     base.delegate :store_credit?, to: :payment_method
     base.scope :store_credits, -> { base.where(source_type: Spree::StoreCredit.to_s) }
     base.scope :not_store_credits, -> { base.where(base.arel_table[:source_type].not_eq(Spree::StoreCredit.to_s).or(base.arel_table[:source_type].eq(nil))) }
@@ -80,3 +80,5 @@ module SpreeStoreCredits::PaymentDecorator
 end
 
 Spree::Payment.include SpreeStoreCredits::PaymentDecorator
+Spree::Payment.include Spree::LoyaltyPoints
+Spree::Payment.include Spree::Payment::LoyaltyPoints
