@@ -1,14 +1,12 @@
 module Spree::UserDecorator
 
-  validates :loyalty_points_balance, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-
-  has_many :loyalty_points_transactions
-  has_many :loyalty_points_debit_transactions
-  has_many :loyalty_points_credit_transactions
-
   def self.included(base)
     base.has_many :store_credits, -> { includes(:credit_type) }
     base.has_many :store_credit_events, through: :store_credits
+    base.has_many :loyalty_points_transactions
+    base.has_many :loyalty_points_debit_transactions
+    base.has_many :loyalty_points_credit_transactions
+    base.validates :loyalty_points_balance, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
     base.prepend(InstanceMethods)
   end
