@@ -13,6 +13,19 @@ en:
       spree/store_credit:
         amount_used: "Amount used"
   spree:
+    loyalty_points_balance: Loyalty Points Balance
+    loyalty_points: Loyalty Points
+    loyalty_points_debit: Loyalty Points To Be Deducted Against this Return
+    loyalty_points_credit: Loyalty Points To Be Awarded Against this Return
+    details: Details
+    min_amount_required_to_get_loyalty_points: "Minimum amount to be spent per order(item total, excluding shipping and any other charges) to award loyalty points."
+    loyalty_points_awarding_unit: "Number of Loyalty Points to be awarded per Unit Amount Spent"
+    loyalty_points_redeeming_balance: Minimum Loyalty Points Balance Required for Redeeming
+    loyalty_points_conversion_rate: "Loyalty point to amount conversion rate"
+    loyalty_points_award_period: Time(in hours) after payment to award loyalty points
+    back_to_user_profile: Back to User Profile
+    update_loyalty_points: Update Loyalty Points
+    loyalty_points_earnable: "%{quantity} Loyalty Points Will Be Awarded for this Order"
     store_credit_payment_method:
       unable_to_void: "Unable to void code: %{auth_code}"
       unable_to_credit: "Unable to credit code: %{auth_code}"
