@@ -1,5 +1,4 @@
 module Spree::UserDecorator
-
   def self.included(base)
     base.has_many :store_credits, -> { includes(:credit_type) }
     base.has_many :store_credit_events, through: :store_credits

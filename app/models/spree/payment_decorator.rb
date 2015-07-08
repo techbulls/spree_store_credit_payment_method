@@ -1,21 +1,20 @@
 module SpreeStoreCredits::PaymentDecorator
-
-  validates :amount, numericality: { greater_than: 0 }, :if => :by_loyalty_points?
-  validate :redeemable_user_balance, :if => :by_loyalty_points?
-  scope :state_not, ->(s) { where('state != ?', s) }
-
-  fsm = self.state_machines[:state]
-  fsm.after_transition :from => fsm.states.map(&:name) - [:completed], :to => [:completed], :do => :notify_paid_order
-  fsm.after_transition :from => fsm.states.map(&:name) - [:completed], :to => [:completed], :do => :redeem_loyalty_points_into_store_credit
-
-  fsm.after_transition :from => fsm.states.map(&:name) - [:completed], :to => [:completed], :do => :redeem_loyalty_points, :if => :by_loyalty_points?
-  fsm.after_transition :from => [:completed], :to => fsm.states.map(&:name) - [:completed] , :do => :return_loyalty_points, :if => :by_loyalty_points?
-
   def self.included(base)
+    base.validates :amount, numericality: { greater_than: 0 }, :if => :by_loyalty_points?
+    base.validate :redeemable_user_balance, :if => :by_loyalty_points?
+    
+    base.scope :state_not, ->(s) { where('state != ?', s) }
     base.delegate :store_credit?, to: :payment_method
     base.scope :store_credits, -> { base.where(source_type: Spree::StoreCredit.to_s) }
     base.scope :not_store_credits, -> { base.where(base.arel_table[:source_type].not_eq(Spree::StoreCredit.to_s).or(base.arel_table[:source_type].eq(nil))) }
     base.after_create :create_eligible_credit_event
+    
+    fsm = base.state_machines[:state]
+    fsm.after_transition :from => fsm.states.map(&:name) - [:completed], :to => [:completed], :do => :notify_paid_order
+    fsm.after_transition :from => fsm.states.map(&:name) - [:completed], :to => [:completed], :do => :redeem_loyalty_points_into_store_credit
+    fsm.after_transition :from => fsm.states.map(&:name) - [:completed], :to => [:completed], :do => :redeem_loyalty_points, :if => :by_loyalty_points?
+    fsm.after_transition :from => [:completed], :to => fsm.states.map(&:name) - [:completed] , :do => :return_loyalty_points, :if => :by_loyalty_points?
+    
     base.prepend(InstanceMethods)
   end
 
