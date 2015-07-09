@@ -23,6 +23,7 @@ en:
     loyalty_points_redeeming_balance: Minimum Loyalty Points Balance Required for Redeeming
     loyalty_points_conversion_rate: "Loyalty point to amount conversion rate"
     loyalty_points_award_period: Time(in hours) after payment to award loyalty points
+    loyalty_points_per_referred_user: Loyalty pointes per referred user
     back_to_user_profile: Back to User Profile
     update_loyalty_points: Update Loyalty Points
     loyalty_points_earnable: "%{quantity} Loyalty Points Will Be Awarded for this Order"

@@ -4,4 +4,5 @@ Spree::AppConfiguration.class_eval do
   preference :loyalty_points_redeeming_balance, :integer, :default => 50
   preference :loyalty_points_conversion_rate, :decimal, :default => 5.0
   preference :loyalty_points_award_period, :integer, :default => 1
+  preference :loyalty_points_per_referred_user, :integer, :default => 1
 end
